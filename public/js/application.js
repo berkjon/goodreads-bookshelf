@@ -1,7 +1,11 @@
 $(document).ready(function() {
-  // This is called after the document has loaded in its entirety
-  // This guarantees that any elements we bind to will exist on the page
-  // when we try to bind to them
 
-  // See: http://docs.jquery.com/Tutorials:Introducing_$(document).ready()
+  $.ajax({
+    type: 'get',
+    url: 'https://www.goodreads.com/review/list/8403316.xml?key=ONBHGOyk3Zy1tq3meX1RZA&v=2'
+  }).done(function(xml){
+    // do work on xml response
+    debugger;
+  })
+
 });
