@@ -18,6 +18,7 @@ gem 'rake'
 gem 'shotgun'
 
 gem 'httparty'
+gem 'fastimage'
 
 group :test do
   gem 'shoulda-matchers'

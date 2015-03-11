@@ -1,5 +1,6 @@
 # Goodreads Bookshelf Visualizer
 - API Key: ONBHGOyk3Zy1tq3meX1RZA
+- LibraryThing Key: 441231f2b92c881d462b94874bb5bfb7
 
 ## To Do:
 - Create
