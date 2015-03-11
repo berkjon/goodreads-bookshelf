@@ -11,6 +11,7 @@ class CreateBooks < ActiveRecord::Migration
       t.text :description
 
       t.string :user_rating
+      t.text :user_review
       t.datetime :date_added
 
       t.integer :gr_review_id

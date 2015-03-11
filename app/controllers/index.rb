@@ -16,7 +16,7 @@ post '/user_id' do
     puts "Created user #{@user.id}"
   end
 
-  api_response = HTTParty.get("https://www.goodreads.com/review/list/#{gr_id}.xml?key=#{GR_API_KEY}&v=2&per_page=10")
+  api_response = HTTParty.get("https://www.goodreads.com/review/list/#{gr_id}.xml?key=#{GR_API_KEY}&v=2&per_page=200")
   parse_response(@user, api_response)
 
   redirect "/user/#{gr_id}"
@@ -25,7 +25,7 @@ end
 get '/user/:gr_id' do
   @user = User.where(gr_id: params[:gr_id]).first
 
-  erb :user_shelf
+  erb :user_shelf_detail
 end
 
 

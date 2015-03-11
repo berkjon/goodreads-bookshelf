@@ -5,9 +5,9 @@ helpers do
     book_array = api_response['GoodreadsResponse']['reviews']['review']
 
     book_array.each do |book|
-      # binding.pry
       unless book_already_on_shelf?(user, book['book']['isbn13'])
         if hash_or_array_to_string(book['shelves']['shelf'], 'name').match(/(?<![\w\S])read(?![\w\d])/)
+          # binding.pry
           new_book = user.books.create(
             title: book['book']['title'],
             author: hash_or_array_to_string(book['book']['authors']['author'], 'name'),
@@ -17,7 +17,8 @@ helpers do
             publication_month: book['book']['publication_month'],
             num_pages: book['book']['num_pages'],
             description: book['book']['description'],
-            user_rating: book['rating'],
+            user_rating: book['rating'].strip,
+            user_review: book['body'],
             date_added: book['date_added'],
             gr_review_id: book['id'],
             gr_book_id: book['book']['id'],
@@ -45,31 +46,30 @@ helpers do
   def find_best_cover_img_url(gr_img_url, isbn13)
     covers = {}
 
-    gr_img_url.gsub!(/(?<=\d)(m\/)/, 'l/')
-    gr_img_url_dimensions = FastImage.size('gr_img_url')
-    gr_img_url_area = gr_img_url_dimensions.inject(:*) unless gr_img_url_dimensions.nil?
-    covers[gr_img_url] = gr_img_url_area
+    if isbn13.nil?
+      return "https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png"
+    else
+      gr_img_url.gsub!(/(?<=\d)(m\/)/, 'l/')
+      gr_img_url_dimensions = FastImage.size(gr_img_url)
+      gr_img_url_area = gr_img_url_dimensions.inject(:*) unless gr_img_url_dimensions.nil?
+      covers[gr_img_url] = gr_img_url_area
 
-    ol_img_url = "http://covers.openlibrary.org/b/isbn/#{isbn13}-L.jpg?default=false"
-    ol_img_url_dimensions = FastImage.size('ol_img_url')
-    ol_img_url_area = ol_img_url_dimensions.inject(:*) unless ol_img_url_dimensions.nil?
-    covers[ol_img_url] = ol_img_url_area
+      ol_img_url = "http://covers.openlibrary.org/b/isbn/#{isbn13}-L.jpg?default=false"
+      ol_img_url_dimensions = FastImage.size(ol_img_url)
+      ol_img_url_area = ol_img_url_dimensions.inject(:*) unless ol_img_url_dimensions.nil?
+      covers[ol_img_url] = ol_img_url_area
 
-    lt_img_url = "http://covers.librarything.com/devkey/#{LT_API_KEY}/large/isbn/#{isbn13}"
-    lt_img_url_dimensions = FastImage.size('ol_img_url')
-    lt_img_url_area = lt_img_url_dimensions.inject(:*) unless lt_img_url_dimensions.inject(:*) == 1
-    covers[lt_img_url] = lt_img_url_area
+      lt_img_url = "http://covers.librarything.com/devkey/#{LT_API_KEY}/large/isbn/#{isbn13}"
+      lt_img_url_dimensions = FastImage.size(lt_img_url)
+      lt_img_url_area = lt_img_url_dimensions.inject(:*) unless lt_img_url_dimensions.inject(:*) == 1
+      covers[lt_img_url] = lt_img_url_area
 
-    #add Google Books cover; requires API key and need to parse JSON response
+      #add Google Books cover; requires API key and need to parse JSON response
 
-    largest_img_url = covers.select {|k,v| v == covers.values.max}.keys.first
-    return largest_img_url
-
+      largest_img_url = covers.select {|k,v| v == covers.values.map(&:to_i).max}.keys.first
+      return largest_img_url
+    end
   end
-
-  # def img_m_to_l(img_url)
-  #   img_url.gsub!(/(?<=\d)(m\/)/, 'l/')
-  # end
 
   def book_already_on_shelf?(user, isbn13)
     user.books.where("isbn13='#{isbn13}'").length > 0
