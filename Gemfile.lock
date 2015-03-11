@@ -31,6 +31,7 @@ GEM
     daemons (1.1.9)
     debugger-linecache (1.2.0)
     diff-lcs (1.2.4)
+    dotenv (2.0.0)
     eventmachine (1.0.3)
     factory_girl (4.2.0)
       activesupport (>= 3.0.0)
@@ -105,6 +106,7 @@ DEPENDENCIES
   activerecord
   activesupport
   capybara
+  dotenv
   factory_girl
   faker
   fastimage

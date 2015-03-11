@@ -1,0 +1,23 @@
+  <h1>Welcome to User # <%= @user.gr_id %>'s Bookshelf!</h1>
+
+  <div class="bookshelf">
+    <% @user.books.each do |book| %>
+      <div class="flip-container" ontouchstart="this.classList.toggle('hover');">
+        <div class="flipper">
+          <div class="front">
+            <!-- front content -->
+            <img src="<%= book.cover_img_url %>">
+          </div>
+          <div class="back">
+            <!-- back content -->
+            <p><%= book.title %></p>
+            <p>Author: <%= book.author %></p>
+            <p>Your Rating: <%= book.user_rating %></p>
+            <p>Community Avg. Rating: <%= book.gr_avg_rating %></p>
+            <p>My Review: <%= book.user_review %></p>
+            <p>ISBN13: <%= book.isbn13 %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
