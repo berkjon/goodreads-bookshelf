@@ -1,14 +1,20 @@
 body {
   counter-reset:section;
   background-color: #F6F6EF;
-  font-family: Verdana;
+  font-family: "Open Sans", sans-serif;
   /*max-width: 700px;*/
   margin: 0 auto;
+  background-image: url('../img/textured_paper.png');
 }
 
 header {
   background-color: #F4712D;
   padding: 5px 5px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 header h1 {
@@ -17,9 +23,16 @@ header h1 {
 }
 
 .bookshelf {
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  -webkit-flex-flow: row wrap;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  /*flex-wrap: wrap;*/
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .book_entry {
@@ -27,22 +40,26 @@ header h1 {
   width: 600px;
   padding: 0px 20px 20px 20px;
   border: 1px dotted black;
+  -webkit-flex: 0 1 auto;
+      -ms-flex: 0 1 auto;
+          flex: 0 1 auto; /* these are defaults for flex-grow-, flex-shrink and flex-basis, so optional */
 }
-
 
 
 /* FLIPPING CSS (http://davidwalsh.name/css-flip) */
 /* entire container, keeps perspective */
 .flip-container {
-  perspective: 1000;
+  -webkit-perspective: 1000;
+          perspective: 1000;
   float: left;
 }
   /* flip the pane when hovered */
   .flip-container:hover .flipper, .flip-container.hover .flipper {
-    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg);
   }
 
-.flip-container, .front, .back, .front img {
+.flip-container, .front, .front img {
   width: 320px;
   height: 480px;
   border: 1px red dotted; /*added for clarity when styling*/
@@ -51,13 +68,15 @@ header h1 {
 /* flip speed goes here */
 .flipper {
   transition: 1.2s;
-  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;
   position: relative;
 }
 
 /* hide back of pane during swap */
 .front, .back {
-  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
   position: absolute;
   top: 0;
   left: 0;
@@ -65,12 +84,279 @@ header h1 {
 
 /* front pane, placed above back */
 .front {
-  z-index: 2;
+  /*z-index: 2;*/
   /* for firefox 31 */
-  transform: rotateY(0deg);
+  -webkit-transform: rotateY(180deg);
+          transform: rotateY(180deg);
 }
 
 /* back, initially hidden pane */
 .back {
-  transform: rotateY(180deg);
+  width: 300px;
+  height: 470px;
+  padding: 10px 10px 10px 10px;
+  background-image: url('../img/extra_clean_paper.png');
+  -webkit-transform: rotateY(0deg);
+          transform: rotateY(0deg);
+/*  -webkit-transform: rotateY(180deg);
+          transform: rotateY(180deg);*/
 }
+
+div.book-title {
+   display: flex;
+   justify-content: center;
+   align-items: flex-end;
+   /*letter-spacing: 1.5px;*/
+   font-size: 1.5em;
+   /*color: rgba(255, 255, 255, 1);*/
+   font-family: "Roboto Condensed", sans-serif;
+   font-weight: 700;
+   text-align: center;
+   margin-bottom: 17px;
+   min-height: 51px; /* 77px for 3 lines of height; 51px for 2 lines */
+   /*text-transform: capitalize;*/
+}
+
+div.book-author {
+  border-top: 1px solid black;
+  text-align: center;
+  font: 400 1em 'Vollkorn', serif;
+  text-transform: uppercase;
+  height: 17px;
+}
+
+div.book-author span {
+  background-image: url('../img/extra_clean_paper.png');
+  position: relative;
+  top: -10px;
+  padding: 0px 7px;
+}
+
+div.book-section-header {
+   letter-spacing: 2px;
+   font-size: 14px;
+   font-weight: 800;
+   color: #999;
+   margin-bottom: 5px;
+   border-width: 0px 0px 1px 0px;
+   border-style: dotted;
+   margin-top: 10px;
+   text-transform: uppercase;
+   display: flex;
+   justify-content: space-between;
+}
+
+.book-stars {
+  color: black;
+  text-align: right;
+  letter-spacing: 1px;
+}
+
+div.book-user-review {
+   line-height: 24px;
+   color: #555;
+   font-size: 0.9em;
+   padding-left: 7px;
+   border-width: 0px 0px 0px 3px;
+   border-style: solid;
+   border-color: #999;
+}
+
+div.book-info {
+  max-height: 67%;
+  text-overflow: scroll;
+  font-size: 0.7em;
+  padding-bottom: 2px;
+}
+
+div span {
+  font-weight: 600;
+}
+
+div.book-tiny-urls {
+  position: absolute;
+  bottom: 13px;
+  right: 5px;
+  font-size: 0.6em;
+  color: #777;
+  background-image: url('../img/extra_clean_paper.png');
+}
+
+div.book-tiny-urls a{
+  padding: 0px 3px;
+}
+
+div.book-tiny-urls a:before {
+  /*position: absolute;*/
+  font-family: FontAwesome;
+  content: "\f14c  ";
+}
+
+div.book-tiny-urls a:hover {
+  color: #444;
+  font-weight: 700;
+}
+
+/*p {
+   font-size: 14px;
+   line-height: 26px;
+   margin-bottom: 35px;
+   font-family: "Open Sans";
+   font-weight: 800;
+   font-style: normal;
+   text-align: center;
+}*/
+
+#diamond {
+    width: 25px;
+    height: 25px;
+    background: #F4E21B;
+    position: absolute;
+/* Rotate */
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    margin: 8px 0px 0px 8px;
+}
+
+#diamond p {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    margin: 9px -6px 0px 5px;
+}
+
+/*####################################################################################*/
+/*
+body {
+   padding: 50px 0;
+   font-size: 13px;
+   font-family: "Old Standard TT";
+   font-style: normal;
+   font-weight: 400;
+}*/
+
+p.weight1 {
+   font-family: "Old Standard TT";
+   font-weight: 400;
+   font-style: italic;
+   font-size: 36px;
+   line-height: 30px;
+}
+
+p.weight2 {
+   font-family: "Old Standard TT";
+   font-weight: 400;
+   font-style: normal;
+   font-size: 36px;
+   line-height: 30px;
+}
+
+p.weight3 {
+   font-family: "Old Standard TT";
+   font-weight: 700;
+   font-style: normal;
+   font-size: 36px;
+   line-height: 30px;
+}
+
+div.wrapper {
+   margin: 0 auto;
+   display: block;
+   white-space: nowrap;
+   text-align: center;
+   padding-bottom: 20px;
+   min-height: 100%;
+   width: 350.640625px;
+   max-width: none;
+}
+
+/*div {
+   text-align: left;
+   display: inline-block;
+   white-space: normal;
+   vertical-align: top;
+   -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   box-sizing: border-box;
+   padding: 0 2%;
+   max-width: 760px;
+   width: 265.3125px;
+}
+
+h1 {
+   font-size: 64px;
+   line-height: 73px;
+   margin-bottom: 25px;
+}*/
+
+
+
+
+p.map {
+   font-weight: 400;
+   font-style: normal;
+   margin-bottom: 0px;
+   text-align: justify;
+   font-size: 27px;
+   line-height: 54px;
+   margin-top: 0px;
+}
+
+
+p.intro {
+   margin-bottom: 35px;
+   font-size: 21px;
+   line-height: 28px;
+   font-family: "Open Sans";
+   font-weight: 800;
+   font-style: italic;
+}
+
+p.inverse-big {
+   background-color: rgba(51,51,51,1);
+   color: rgba(255,255,255,1);
+   padding: 30px;
+   margin-bottom: 0px;
+}
+
+p.inverse-med {
+   background-color: rgba(51,51,51,1);
+   color: rgba(255,255,255,1);
+   padding: 30px;
+   margin-bottom: 0px;
+   padding-top: 0px;
+   font-size: 15px;
+}
+
+p.inverse-small {
+   padding-top: 0px;
+   padding-left: 30px;
+   padding-right: 30px;
+   padding-bottom: 30px;
+   background-color: rgba(51,51,51,1);
+   color: rgba(255,255,255,1);
+   font-size: 1.6em;
+}
+
+p.inverse-heading {
+   background-color: rgba(51,51,51,1);
+   color: rgba(255,255,255,1);
+   padding: 30px;
+   margin-bottom: 0px;
+   padding-bottom: 0px;
+   font-size: 15px;
+   letter-spacing: 2px;
+   margin-top: 50px;
+   width: 218.40625px;
+   text-align: justify;
+   text-transform: none;
+}
+
+
+
+

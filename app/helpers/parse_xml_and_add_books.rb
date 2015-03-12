@@ -5,7 +5,7 @@ helpers do
     book_array = api_response['GoodreadsResponse']['reviews']['review']
 
     book_array.each do |book|
-      unless book_already_on_shelf?(user, book['book']['isbn13'])
+      unless book_already_on_shelf?(user, book['book']['id'])
         if hash_or_array_to_string(book['shelves']['shelf'], 'name').match(/(?<![\w\S])read(?![\w\d])/)
           # binding.pry
           new_book = user.books.create(
@@ -17,8 +17,8 @@ helpers do
             publication_month: book['book']['publication_month'],
             num_pages: book['book']['num_pages'],
             description: book['book']['description'],
-            user_rating: book['rating'].strip,
-            user_review: book['body'],
+            user_rating: book['rating'],
+            user_review: strip_text_if_not_nil(book['body']),
             date_added: book['date_added'],
             gr_review_id: book['id'],
             gr_book_id: book['book']['id'],
@@ -41,6 +41,10 @@ helpers do
       output_array << hash_or_array[key]
     end
     output_string = output_array.compact.join(', ')
+  end
+
+  def strip_text_if_not_nil(xml_element)
+    xml_element.nil? ? xml_element : xml_element.strip
   end
 
   def find_best_cover_img_url(gr_img_url, isbn13)
@@ -71,8 +75,8 @@ helpers do
     end
   end
 
-  def book_already_on_shelf?(user, isbn13)
-    user.books.where("isbn13='#{isbn13}'").length > 0
+  def book_already_on_shelf?(user, gr_book_id)
+    user.books.where("gr_book_id='#{gr_book_id}'").length > 0
   end
 
 end
