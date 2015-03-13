@@ -1,16 +1,18 @@
 <div class="container">
 
-<header>
-  <!-- <div class="site-header"> -->
-    <h1>Shelfworm.</h1>
-    <h2>Your bookshelf's home on the Web.</h2>
-  <!-- </div> -->
-</header>
+  <header>
+      <h1>Shelfworm.</h1>
+      <h2>Your bookshelf's home on the Web.</h2>
+  </header>
 
+  <div class="welcome">
+    <p>Enter a Goodreads User ID to see a public bookshelf, or Sign In via Goodreads to manage your own profile</p>
+    <form action='/user_id' method='post'>
+      <input type='text' name='user_input' value='8403316'/>
+      <input class="button button-3d" type='submit' value='Submit User ID'/>
+    </form>
+    <button class="button button-3d"><a href="/sign_in_with_gr">Sign In via Goodreads</a></button>
+  </div>
 
-  <form action='/user_id' method='post'>
-    <input type='text' name='user_input' value='8403316'/>
-    <input type='submit' value='Submit User ID'/>
-  </form>
 
 </div>

@@ -1,39 +1,7 @@
   <h1>Welcome to User # <%= @user.gr_id %>'s Bookshelf!</h1>
 
-  <% books_array = @user.books.sort_by! { |book| book.user_rating.to_i }.reverse %>
   <div class="bookshelf">
-    <% books_array.each do |book| %>
-      <div class="flip-container rating-<%= book.user_rating %>" ontouchstart="this.classList.toggle('hover');">
-        <div class="flipper">
-          <div class="front">
-            <!-- front content -->
-            <% unless book.user_rating.to_i == 0 %>
-              <div id="diamond"><p><%= book.user_rating %></p></div>
-            <% end %>
-            <img src="<%= book.cover_img_url %>">
-          </div>
-          <div class="back">
-            <!-- back content -->
-            <div class="book-title"><%= book.title %></div>
-            <div class="book-author"><span><%= book.author %></span></div>
-            <div class="book-section-header">
-              MY REVIEW
-              <span class="book-stars">
-              <% unless book.user_rating.to_i == 0 %>
-                <% (5 - book.user_rating.to_i).times do %>☆<% end %><% book.user_rating.to_i.times do %>★<% end %>
-              <% end %>
-              </span>
-            </div>
-            <div class="book-user-review"><%= truncate_string(book.user_review) %></div>
-            <div class="book-section-header">ADDITIONAL INFORMATION</div>
-            <div class="book-info"><span>Community Avg. Rating: </span><%= book.gr_avg_rating %></div>
-            <div class="book-info"><span>Description: </span><%= book.description %></div>
-            <div class="book-tiny-urls"><a href="<%= book.gr_book_url %>">Goodreads</a> |
-            <a href="http://www.amazon.com/gp/product/<%= book.isbn10 %>/?tag=shelfworm-20">Amazon</a></div>
-
-
-          </div>
-        </div>
-      </div>
+    <% @first_20_books.each do |book| %>
+      <%= erb :_book, locals: {book: book} %>
     <% end %>
   </div>

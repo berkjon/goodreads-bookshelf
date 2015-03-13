@@ -20,6 +20,7 @@ gem 'shotgun'
 gem 'httparty'
 gem 'fastimage'
 gem 'dotenv'
+gem 'oauth'
 
 group :test do
   gem 'shoulda-matchers'
