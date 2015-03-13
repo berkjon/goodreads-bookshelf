@@ -19,25 +19,30 @@ post '/user_id' do
   redirect "/user/#{gr_id}"
 end
 
-COUNTER = 0
+# COUNTER = 0
 get '/user/infinite_scroll' do
+  # session[:counter] = session[:counter] ?
+  #                     session[:counter] + 1 : 1
   # binding.pry
-  p "COUNTER: #{COUNTER}"
-  COUNTER += 1
-  p "COUNTER: #{COUNTER}"
-  p "session[:sorted_book_ids]: count: #{session[:sorted_book_ids].length} contents: #{session[:sorted_book_ids]}"
-  next_book_ids = session[:sorted_book_ids].shift(10)
-  session[:books_already_displayed] = session[:books_already_displayed] + next_book_ids
-  p "session[:books_already_displayed]: count: #{session[:books_already_displayed].length} contents: #{session[:books_already_displayed]}"
-  p "next_book_ids: #{next_book_ids}"
-  p "session[:sorted_book_ids]: count: #{session[:sorted_book_ids].length} contents: #{session[:sorted_book_ids]}"
+  # p "COUNTER: #{COUNTER}"
+  # COUNTER += 1
+  # p "COUNTER: #{COUNTER}"
+  # p "session[:sorted_book_ids]: count: #{session[:sorted_book_ids].length} contents: #{session[:sorted_book_ids]}"
+  all_books = session[:sorted_book_ids]
+  next_book_ids = all_books.shift(10)
+  session[:sorted_book_ids] = all_books
+
+  # session[:books_already_displayed] += next_book_ids
+  # p "session[:books_already_displayed]: count: #{session[:books_already_displayed].length} contents: #{session[:books_already_displayed]}"
+  # p "next_book_ids: #{next_book_ids}"
+  # p "session[:sorted_book_ids]: count: #{session[:sorted_book_ids].length} contents: #{session[:sorted_book_ids]}"
   more_books = next_book_ids.map { |id| Book.find(id) }
   erb :_more_books, locals: {more_books: more_books}
 end
 
 get '/user/:gr_id' do
   @user = User.where(gr_id: params[:gr_id]).first
-  books_array = @user.books.sort_by! { |book| book.user_rating.to_i }.reverse
+  books_array = @user.books.sort_by { |book| book.user_rating.to_i }.reverse
   @first_20_books = books_array.shift(20)
   session[:sorted_book_ids] = books_array.map{|book| book.id} #remaining books
   session[:books_already_displayed] = []
@@ -67,15 +72,18 @@ end
 # end
 
 get '/auth' do
-  # binding.pry
 
-puts params
+  puts "params: #{params}"
 
   @access_token = use_request_token.get_access_token(oauth_verifier: params[:oauth_token])
 
-  puts @access_token
+  puts "access token: #{@access_token}"
+  current_user_id = @access_token.get('/api/auth_user')
+  puts "current_user_id: #{current_user_id}"
+  binding.pry
 
-  user = User.find_or_create_by(username: @access_token.params[:screen_name])
+
+  user = User.find_or_create_by(username: @access_token.token)
   user.oauth_token = @access_token.token
   user.oauth_secret = @access_token.secret
   user.save

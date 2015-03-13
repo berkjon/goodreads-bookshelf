@@ -6,7 +6,7 @@ helpers do
 
     book_array.each do |book|
       unless book_already_on_shelf?(user, book['book']['id'])
-        binding.pry
+        # binding.pry
         if hash_or_array_to_string(book['shelves']['shelf'], 'name').match(/(?<![\w\S])read(?![\w\d])/)
           new_book = user.books.create(
             title: book['book']['title'],

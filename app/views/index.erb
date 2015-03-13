@@ -6,12 +6,14 @@
   </header>
 
   <div class="welcome">
-    <p>Enter a Goodreads User ID to see a public bookshelf, or Sign In via Goodreads to manage your own profile</p>
+    <p>Enter a Goodreads User ID to see a public bookshelf:</p>
     <form action='/user_id' method='post'>
       <input type='text' name='user_input' value='8403316'/>
       <input class="button button-3d" type='submit' value='Submit User ID'/>
     </form>
-    <button class="button button-3d"><a href="/sign_in_with_gr">Sign In via Goodreads</a></button>
+    <p>Or Sign In via Goodreads to manage your own profile:</p>
+    <a href="/sign_in_with_gr"><img src="/img/login_with_goodreads.png"></a>
+    <!-- <button class="button button-3d"><a href="/sign_in_with_gr">Sign In via Goodreads</a></button> -->
   </div>
 
 
