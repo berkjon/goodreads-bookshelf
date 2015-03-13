@@ -80,7 +80,7 @@ get '/auth' do
   puts "access token: #{@access_token}"
   current_user_id = @access_token.get('/api/auth_user')
   puts "current_user_id: #{current_user_id}"
-  binding.pry
+  # binding.pry
 
 
   user = User.find_or_create_by(username: @access_token.token)
