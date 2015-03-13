@@ -54,13 +54,13 @@ end
 
 get '/sign_in_with_gr' do
   # binding.pry
-  redirect request_token.authorize_url
+  redirect create_request_token.authorize_url
 end
 
-# get '/sign_out' do
-#   session.clear
-#   redirect '/'
-# end
+get '/sign_out' do
+   session.clear
+   redirect '/'
+end
 
 # get '/profile/:gr_id' do
 
@@ -68,9 +68,12 @@ end
 
 get '/auth' do
   # binding.pry
-  @access_token = request_token.get_access_token(oauth_token: params[:oauth_token])
-  # @access_token = request_token.params[:oauth_token]
-  session.delete(:request_token)
+
+puts params
+
+  @access_token = use_request_token.get_access_token(oauth_verifier: params[:oauth_token])
+
+  puts @access_token
 
   user = User.find_or_create_by(username: @access_token.params[:screen_name])
   user.oauth_token = @access_token.token

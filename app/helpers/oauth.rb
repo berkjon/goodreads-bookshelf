@@ -5,21 +5,20 @@ helpers do
     @consumer ||= OAuth::Consumer.new(
       ENV['GR_API_KEY'],
       ENV['GR_API_SECRET'],
-      site: "http://www.goodreads.com" )
+      site: "http://www.goodreads.com")
   end
 
-  def request_token
-    # binding.pry
-    if not session[:request_token]
-      #below 'host_and_port' logic allows app to work locally and on Heroku
-      host_and_port = request.host
-      host_and_port << ":9393" if request.host == "localhost"
-      session[:request_token] = oauth_consumer.get_request_token(
-        oauth_callback: "http://#{host_and_port}/auth"
-        )
-    end
-    session[:request_token]
+  def use_request_token
+    #session[:request_token].tap(x){  }
+    session.delete(:request_token)
   end
+
+  def create_request_token
+    puts "GETTING NEW TOKEN"
+    session[:request_token] = oauth_consumer.get_request_token
+  end
+
+
 
   def current_user
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
