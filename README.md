@@ -1,6 +1,4 @@
-# Goodreads Bookshelf Visualizer
-- API Key: ONBHGOyk3Zy1tq3meX1RZA
-- LibraryThing Key: 441231f2b92c881d462b94874bb5bfb7
+<!-- #Shelfworm
 
 ## To Do:
 - Create
@@ -37,4 +35,4 @@ https://www.goodreads.com/user/show/8403316.xml?key=ONBHGOyk3Zy1tq3meX1RZA
 - add validations for database?
 - add logic for users with >200 books
 - add more image sources?
-- add option to select between images I pull automatically?
+- add option to select between images I pull automatically? -->
