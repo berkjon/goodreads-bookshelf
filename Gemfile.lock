@@ -123,6 +123,7 @@ DEPENDENCIES
   fastimage
   hirb
   httparty
+  nokogiri
   oauth
   pg
   pry-byebug

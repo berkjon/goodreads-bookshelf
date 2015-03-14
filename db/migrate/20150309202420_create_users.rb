@@ -3,8 +3,9 @@ class CreateUsers < ActiveRecord::Migration
     create_table :users do |t|
       t.integer :gr_id
       t.string :username
-      t.string :oauth_token
-      t.string :oauth_secret
+      t.string :gr_oauth_token
+      t.string :gr_oauth_secret
+      t.string :gr_full_name
 
       t.timestamps
     end

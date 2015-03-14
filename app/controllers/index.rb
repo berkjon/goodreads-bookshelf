@@ -80,15 +80,20 @@ get '/auth' do
   puts "access token: #{@access_token}"
   current_user_id = @access_token.get('/api/auth_user')
   puts "current_user_id: #{current_user_id}"
-  # binding.pry
 
+  current_user_object = @access_token.get('/api/auth_user')
+  current_user_parsed = Nokogiri::XML(current_user_object.body)
+  current_user_id = current_user_parsed.xpath('//user').first['id']
+  current_user_full_name = current_user_parsed.xpath('//name').first.text
 
-  user = User.find_or_create_by(username: @access_token.token)
-  user.oauth_token = @access_token.token
-  user.oauth_secret = @access_token.secret
+  user = User.find_or_create_by(gr_id: current_user_id)
+  user.gr_oauth_token = @access_token.token
+  user.gr_oauth_secret = @access_token.secret
+  user.gr_full_name = current_user_full_name
   user.save
 
   session[:user_id] = user.id
+  binding.pry
 
   redirect "/profile/#{user.id}"
 end

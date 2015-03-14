@@ -21,6 +21,7 @@ gem 'httparty'
 gem 'fastimage'
 gem 'dotenv'
 gem 'oauth'
+gem 'nokogiri'
 
 group :test do
   gem 'shoulda-matchers'
