@@ -34,4 +34,3 @@ helpers do
 
 end
 
-OAuth::Consumer.new(ENV['GR_API_KEY'], ENV['GR_API_SECRET'], site: "http://www.goodreads.com" )

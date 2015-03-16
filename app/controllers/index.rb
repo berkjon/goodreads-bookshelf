@@ -93,11 +93,12 @@ get '/auth' do
   user.save
 
   session[:user_id] = user.id
-  binding.pry
+  # binding.pry
 
   redirect "/profile/#{user.id}"
 end
 
 get '/profile/:id' do
   p "MADE IT INSIDE PROFILE!"
+  p session
 end
