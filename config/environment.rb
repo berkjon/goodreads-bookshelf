@@ -24,7 +24,7 @@ require 'json'
 
 require 'httparty'
 require 'pry-byebug' if development?
-require 'hirb'
+require 'hirb' if development?
 require 'fastimage'
 require 'dotenv'
 Dotenv.load
