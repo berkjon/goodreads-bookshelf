@@ -65,6 +65,8 @@ helpers do
 
       lt_img_url = "http://covers.librarything.com/devkey/#{ENV['LT_API_KEY']}/large/isbn/#{isbn13}"
       lt_img_url_dimensions = FastImage.size(lt_img_url)
+      p "CURRENT ISBN13: #{isbn13}"
+      p "LT_IMG_URL: #{lt_img_url}"
       p "LT_IMG_URL_DIMENSIONS: #{lt_img_url_dimensions}"
       lt_img_url_area = lt_img_url_dimensions.inject(:*) unless lt_img_url_dimensions.inject(:*) == 1 || lt_img_url_dimensions.nil?
       covers[lt_img_url] = lt_img_url_area
