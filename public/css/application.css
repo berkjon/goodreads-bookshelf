@@ -125,7 +125,7 @@ input {
   width: 300px;
   height: 470px;
   padding: 10px 10px 10px 10px;
-  overflow: auto;
+  /*overflow: auto;*/
   background-image: url('../img/extra_clean_paper.png');
   -webkit-transform: rotateY(180deg);
           transform: rotateY(180deg);
