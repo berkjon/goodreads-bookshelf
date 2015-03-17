@@ -8,14 +8,14 @@ helpers do
       site: "http://www.goodreads.com")
   end
 
-  def use_request_token
-    #session[:request_token].tap(x){  }
-    session.delete(:request_token)
-  end
-
   def create_request_token
     puts "GETTING NEW TOKEN"
     session[:request_token] = oauth_consumer.get_request_token
+  end
+
+  def use_request_token
+    #session[:request_token].tap(x){  }
+    session.delete(:request_token)
   end
 
   def current_user

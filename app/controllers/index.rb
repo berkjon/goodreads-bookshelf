@@ -14,6 +14,9 @@ post '/user_id' do
   end
 
   api_response = HTTParty.get("https://www.goodreads.com/review/list/#{gr_id}.xml?key=#{ENV['GR_API_KEY']}&v=2&per_page=200")
+  p "@USER = #{@user}"
+  p "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+  p "API RESPONSE: #{api_response}"
   parse_response(@user, api_response)
 
   redirect "/user/#{gr_id}"
@@ -74,7 +77,8 @@ end
 get '/auth' do
 
   puts "params: #{params}"
-
+  # binding.pry
+  puts "REQUEST TOKEN: #{session[:request_token]}"
   @access_token = use_request_token.get_access_token(oauth_verifier: params[:oauth_token])
 
   puts "access token: #{@access_token}"
