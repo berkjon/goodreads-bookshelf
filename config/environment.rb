@@ -19,11 +19,11 @@ require 'sinatra'
 require "sinatra/reloader" if development?
 
 require 'erb'
-require 'faker'
+require 'faker' if development?
 require 'json'
 
 require 'httparty'
-require 'pry-byebug'
+require 'pry-byebug' if development?
 require 'hirb'
 require 'fastimage'
 require 'dotenv'
