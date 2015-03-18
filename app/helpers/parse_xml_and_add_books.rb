@@ -68,7 +68,7 @@ helpers do
       p "CURRENT ISBN13: #{isbn13}"
       p "LT_IMG_URL: #{lt_img_url}"
       p "LT_IMG_URL_DIMENSIONS: #{lt_img_url_dimensions}"
-      lt_img_url_area = lt_img_url_dimensions.inject(:*) unless lt_img_url_dimensions.inject(:*) == 1 || lt_img_url_dimensions.nil?
+      lt_img_url_area = lt_img_url_dimensions.inject(:*) unless lt_img_url_dimensions.nil? || lt_img_url_dimensions.inject(:*) == 1
       covers[lt_img_url] = lt_img_url_area
 
       #add Google Books cover; requires API key and need to parse JSON response
