@@ -5,8 +5,6 @@ helpers do
     book_array = api_response['GoodreadsResponse']['reviews']['review']
     thread_list = [] # keep track of all threads
 
-    binding.pry
-
     book_array.each do |book|
       unless book_already_on_shelf?(user, book['book']['id'])
         if hash_or_array_to_string(book['shelves']['shelf'], 'name').match(/(?<![\w\S])read(?![\w\d])/)
