@@ -14,7 +14,7 @@ post '/user_id' do
   end
 
   api_response = HTTParty.get("https://www.goodreads.com/review/list/#{gr_id}.xml?key=#{ENV['GR_API_KEY']}&v=2&per_page=200")
-
+  binding.pry
   parse_response(@user, api_response)
 
   redirect "/user/#{gr_id}"
