@@ -8,8 +8,9 @@ gem 'pg'
 gem 'sinatra'
 gem 'sinatra-contrib'
 
+gem 'puma'
 # Use Thin for our web server
-gem 'thin'
+# gem 'thin'
 
 gem 'activesupport'
 gem 'activerecord'
@@ -22,6 +23,7 @@ gem 'fastimage'
 gem 'dotenv'
 gem 'oauth'
 gem 'nokogiri'
+gem 'foreman'
 
 group :test do
   gem 'shoulda-matchers'

@@ -17,6 +17,9 @@
   <title>Shelfworm - The Virtual Bookshelf</title>
 </head>
 <body>
+  <% if logged_in? %>
+    <%= erb :_logged_in_navbar %>
+  <% end %>
   <%= yield %>
 </body>
 </html>

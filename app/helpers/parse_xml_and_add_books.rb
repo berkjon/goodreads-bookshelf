@@ -3,12 +3,12 @@ helpers do
   def parse_response(user, api_response)
     total_reviews = api_response['GoodreadsResponse']['reviews']['total'].to_i
     book_array = api_response['GoodreadsResponse']['reviews']['review']
-    thread_list = [] # keep track of all threads
+    # thread_list = [] # keep track of all threads
 
     book_array.each do |book|
       unless book_already_on_shelf?(user, book['book']['id'])
         if hash_or_array_to_string(book['shelves']['shelf'], 'name').match(/(?<![\w\S])read(?![\w\d])/)
-          thread_list << Thread.new { # add new thread to populate each book
+          # thread_list << Thread.new { # add new thread to populate each book
             new_book = user.books.create(
               title: book['book']['title'],
               author: hash_or_array_to_string(book['book']['authors']['author'], 'name'),
@@ -27,13 +27,13 @@ helpers do
               gr_book_url: book['book']['link'],
               cover_img_url: find_best_cover_img_url(book['book']['image_url'], book['book']['isbn13'])
             )
-            ActiveRecord::Base.connection_pool.release_connection # needed to prevent 5 second timeout caused by threading
-          }
+            # ActiveRecord::Base.connection_pool.release_connection # needed to prevent 5 second timeout caused by threading
+          # }
         end
       end
     end
 
-    thread_list.each {|thread| thread.join} # wait for each thread to complete
+    # thread_list.each {|thread| thread.join} # wait for each thread to complete
 
     # total_pages_required = total_reviews % 200
     # total_pages_required.times-1 do
@@ -57,7 +57,8 @@ helpers do
     covers = {}
 
     if isbn13.nil?
-      return "https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png"
+      return gr_img_url
+      # return "https://s.gr-assets.com/assets/nophoto/book/111x148-bcc042a9c91a29c1d680899eff700a03.png"
     else
       gr_img_url.gsub!(/(?<=\d)(m\/)/, 'l/')
       gr_img_url_dimensions = FastImage.size(gr_img_url)
@@ -78,8 +79,8 @@ helpers do
       covers[lt_img_url] = lt_img_url_area
 
       #add Google Books cover; requires API key and need to parse JSON response
-
       largest_img_url = covers.select {|k,v| v == covers.values.map(&:to_i).max}.keys.first
+      # binding.pry
       return largest_img_url
     end
   end

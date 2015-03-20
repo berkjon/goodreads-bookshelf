@@ -13,7 +13,7 @@ post '/user_id' do
     puts "Created user #{@user.id}"
   end
 
-  api_response = HTTParty.get("https://www.goodreads.com/review/list/#{gr_id}.xml?key=#{ENV['GR_API_KEY']}&v=2&per_page=200")
+  api_response = HTTParty.get("https://www.goodreads.com/review/list/#{gr_id}.xml?key=#{ENV['GR_API_KEY']}&v=2&per_page=200&sort=rating")
 
   parse_response(@user, api_response)
 
@@ -51,11 +51,6 @@ get '/user/:gr_id' do
 end
 
 
-get '/user/:gr_id/detail' do
-  @user = User.where(gr_id: params[:gr_id]).first
-  erb :user_shelf_detail
-end
-
 ############## WIP #################
 
 get '/sign_in_with_gr' do
@@ -75,7 +70,6 @@ end
 get '/auth' do
 
   puts "params: #{params}"
-  # binding.pry
   puts "REQUEST TOKEN: #{session[:request_token]}"
   @access_token = use_request_token.get_access_token(oauth_verifier: params[:oauth_token])
 
@@ -88,19 +82,68 @@ get '/auth' do
   current_user_id = current_user_parsed.xpath('//user').first['id']
   current_user_full_name = current_user_parsed.xpath('//name').first.text
 
-  user = User.find_or_create_by(gr_id: current_user_id)
+
+  user = User.find_or_initialize_by(gr_id: current_user_id)
+  # user.id.nil? ? new_user = true : new_user = false
+  # user.gr_oauth_token.nil? ? first_time_oauth = true : first_time_oauth = false
   user.gr_oauth_token = @access_token.token
   user.gr_oauth_secret = @access_token.secret
   user.gr_full_name = current_user_full_name
   user.save
 
   session[:user_id] = user.id
-  # binding.pry
 
-  redirect "/profile/#{user.id}"
+  if current_user.username.nil?
+    # session[:user_status] = "new"
+    redirect "/profile/#{user.id}/new"
+  # elsif first_time_oauth
+  #   session[:user_status] = "first_oauth"
+  #   redirect "/profile/#{user.id}/new"
+  else
+    # session[:user_status] = "existing"
+    redirect "/profile/#{current_user.username}"
+  end
+
 end
 
 get '/profile/:id' do
-  p "MADE IT INSIDE PROFILE!"
-  p session
+  if current_user.id == params[:id]
+    erb :user_profile
+  else
+    halt 403, "Sorry, you are not authorized to view this page :("
+  end
+end
+
+get '/profile/:id/new' do
+  if current_user.id == params[:id]
+    erb :new_user
+  else
+    halt 403, "Sorry, you are not authorized to view this page :("
+  end
+end
+
+get '/logout' do
+  logout
+  redirect '/'
+end
+
+
+### Keep these routes last ###
+
+get '/:username' do
+  @user = User.where(username: params[:username]).first
+  books_array = @user.books.sort_by { |book| book.user_rating.to_i }.reverse
+  @first_20_books = books_array.shift(20)
+  session[:sorted_book_ids] = books_array.map{|book| book.id} #remaining books
+  session[:books_already_displayed] = []
+  erb :user_shelf
+end
+
+get '/:gr_id/shelf/modify' do
+  binding.pry
+  if current_user.gr_id == params[:gr_id]
+    erb :modify_shelf
+  else
+    halt 403, "Sorry, you are not authorized to view this page :("
+  end
 end

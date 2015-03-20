@@ -1,8 +1,21 @@
 <div class="container">
-  <h1>Welcome to User # <%= @user.gr_id %>'s Bookshelf!</h1>
+  <h1>Shelf Detail for <%= current_user.gr_full_name %>:</h1>
 
+  <h2>Quick Stats:</h2>
+  <ul>
+    <li>Goodreads User ID: <%= current_user.gr_id %></li>
+    <li>Shelfworm username: <%= current_user.username %></li>
+    <li>Public shelf URL: <a href="www.shelfworm.com/<%= current_user.username %>">www.shelfworm.com/<%= current_user.username %></a></li>
+    <li>Total books on shelf: <%= current_user.books.count %></li>
+    <li>Goodreads profile URL: [TBU]</li>
+    <li>Last login: [TBU]</li>
+    <li>Last time someone viewed your profile: [TBU]</li>
+  </ul>
+
+
+  <h2>Book Detail:</h2>
   <% counter = 0 %>
-  <% @user.books.each do |book| %>
+  <% current_user.books.each do |book| %>
     <div class="book_entry">
       <% counter+= 1 %>
       <h3><%= counter %>) <%= book.title %></h3>

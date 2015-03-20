@@ -1,0 +1,16 @@
+<h1>Welcome to Shelfworm, <%= current_user.gr_full_name %>!</h1>
+
+<div class="welcome">
+  <% if current_user.username == nil %>
+    <p>Please take a moment to select a username on Shelfworm that will serve as your custom URL on our site.  For example, if you pick the name "mister_bigglesworth", your public Shelfworm bookshelf will be accessible at www.shelfworm.com/mister_bigglesworth .  Note you can only make this selection once!</p>
+  <% elsif session[:user_status] == "first_oauth" %>
+  <p>We already ha
+  <p>Enter a Goodreads User ID to see a public bookshelf:</p>
+  <form action='/user_id' method='post'>
+    <input type='text' name='user_input' value='8403316'/>
+    <input class="button button-3d" type='submit' value='Submit User ID'/>
+  </form>
+  <p>Or Sign In via Goodreads to manage your own profile:</p>
+  <a href="/sign_in_with_gr"><img src="/img/login_with_goodreads.png"></a>
+  <!-- <button class="button button-3d"><a href="/sign_in_with_gr">Sign In via Goodreads</a></button> -->
+</div>
