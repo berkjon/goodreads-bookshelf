@@ -2,6 +2,7 @@
   <ul>
     <li>Logged in as <%= current_user.gr_full_name %></li>
     <li>Shelfworm username: <%= current_user.username %></li>
+    <li>Books on Shelf: <%= current_user.books.count %></li>
     <li>Goodreads ID#: <%= current_user.gr_id %></li>
     <li><a href="/">Home</a></li>
     <li><a href="/user/<%= current_user.gr_id %>">Bookshelf</a></li>

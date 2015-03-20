@@ -143,7 +143,6 @@ get '/:username' do
 end
 
 get '/:gr_id/shelf/modify' do
-  binding.pry
   if current_user.gr_id == params[:gr_id]
     erb :modify_shelf
   else

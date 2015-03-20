@@ -1,3 +1,9 @@
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
 body {
   counter-reset:section;
   background-color: #F6F6EF;
@@ -29,6 +35,37 @@ header h2 {
 
 input {
   height: 28px;
+}
+
+nav {
+  border: 1px solid #ccc;
+  border-right: none;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+nav ul {
+  font-size: 0.7em;
+  display: flex;
+  background: #eee;
+  margin: 0;
+}
+
+nav ul li {
+  list-style: none;
+  border-left: 1px solid #fff;
+  border-right: 1px solid #ccc;
+  text-align: center;
+  flex-grow: 1;
+  padding: 10px 0;
+}
+
+nav ul li:first-child {
+  border-left: none;
+}
+
+nav ul li a {
+  color: #616161;
 }
 
 .welcome {
