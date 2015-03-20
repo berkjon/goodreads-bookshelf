@@ -115,6 +115,9 @@ get '/profile/:id' do
 end
 
 get '/profile/:id/new' do
+  puts "CURRENT_USER: #{current_user}"
+  puts "CURRENT_USER.ID: #{current_user.id}"
+  puts "PARAMS.ID: #{params[:id]}"
   if current_user.id == params[:id]
     erb :new_user
   else
