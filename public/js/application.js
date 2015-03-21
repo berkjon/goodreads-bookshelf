@@ -25,19 +25,26 @@
 
 $(document).ready(function() {
   console.log('ready!');
-  $('.back').click(function() {
-  // $(window).scroll(function() {
+  // $('.back').click(function() {
+  $(window).scroll(function(event) {
+    console.log(event)
+    console.log(event.eventPhase)
     // debugger;
-    // if(Math.floor($(window).scrollTop() + $(window).height()) >= $(document).height()-10) {
+    if(Math.floor($(window).scrollTop() + $(window).height()) >= $(document).height()-10) {
       $.ajax({
         url: '/user/infinite_scroll'
       }).done(function(html){
-        $('.bookshelf').append(html);
+        console.log(html)
+        // $('.bookshelf').append(html);
+        // event.bubbles = false;
+
+        // event.stopPropagation();
       }).fail(function(){
         console.log("you failed at infinite scroll");
+        console.log("\n")
       })
       console.log("back inside if condition");
-    // }
+    }
   });
 
 
