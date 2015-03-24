@@ -20,27 +20,28 @@ post '/user_id' do
   redirect "/user/#{gr_id}"
 end
 
-# COUNTER = 0
 get '/user/infinite_scroll' do
-  # session[:counter] = session[:counter] ?
-  #                     session[:counter] + 1 : 1
-  # binding.pry
-  # p "COUNTER: #{COUNTER}"
-  # COUNTER += 1
-  # p "COUNTER: #{COUNTER}"
-  # p "session[:sorted_book_ids]: count: #{session[:sorted_book_ids].length} contents: #{session[:sorted_book_ids]}"
+  puts "*" * 50
+  puts "*" * 50
+  puts "*" * 50
+  puts "*" * 50
   all_books = session[:sorted_book_ids]
   next_book_ids = all_books.shift(10)
   session[:sorted_book_ids] = all_books
-
-  # session[:books_already_displayed] += next_book_ids
-  # p "session[:books_already_displayed]: count: #{session[:books_already_displayed].length} contents: #{session[:books_already_displayed]}"
-  # p "next_book_ids: #{next_book_ids}"
-  # p "session[:sorted_book_ids]: count: #{session[:sorted_book_ids].length} contents: #{session[:sorted_book_ids]}"
   more_books = next_book_ids.map { |id| Book.find(id) }
-  erb :_more_books, locals: {more_books: more_books}
-  # p more_books
+  erb :_more_books, locals: {more_books: more_books}, layout: false;
 end
+
+get '/user/:gr_id' do
+  @user = User.where(gr_id: params[:gr_id]).first
+  books_array = @user.books.order('user_rating DESC').ids
+  first_20_books = books_array.shift(20)
+  @first_20_book_objects = first_20_books.map {|id| Book.find(id)}
+  session[:sorted_book_ids] = books_array
+  session[:books_already_displayed] = []
+  erb :user_shelf
+end
+
 
 post '/user/infinite_scroll' do
   # session[:counter] = session[:counter] ?
@@ -61,15 +62,6 @@ post '/user/infinite_scroll' do
   more_books = next_book_ids.map { |id| Book.find(id) }
   p more_books
   # p more_books
-end
-
-get '/user/:gr_id' do
-  @user = User.where(gr_id: params[:gr_id]).first
-  books_array = @user.books.sort_by { |book| book.user_rating.to_i }.reverse
-  @first_20_books = books_array.shift(20)
-  session[:sorted_book_ids] = books_array.map{|book| book.id} #remaining books
-  session[:books_already_displayed] = []
-  erb :user_shelf
 end
 
 
