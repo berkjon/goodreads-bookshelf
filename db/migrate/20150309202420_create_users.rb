@@ -7,7 +7,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :gr_oauth_secret
       t.string :gr_full_name
 
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end

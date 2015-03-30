@@ -21,15 +21,12 @@ post '/user_id' do
 end
 
 get '/user/infinite_scroll' do
-  puts "*" * 50
-  puts "*" * 50
-  puts "*" * 50
-  puts "*" * 50
   all_books = session[:sorted_book_ids]
   next_book_ids = all_books.shift(10)
   session[:sorted_book_ids] = all_books
   more_books = next_book_ids.map { |id| Book.find(id) }
   erb :_more_books, locals: {more_books: more_books}, layout: false;
+
 end
 
 get '/user/:gr_id' do

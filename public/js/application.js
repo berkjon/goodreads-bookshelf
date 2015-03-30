@@ -26,7 +26,7 @@
 
 
 $(document).ready(function() {
-  PAGENUM = 3 // starts at 3 because first 2 pages served on initial GET
+  // PAGENUM = 3 // starts at 3 because first 2 pages served on initial GET
   var fetching = false;
 
   console.log('ready!');
