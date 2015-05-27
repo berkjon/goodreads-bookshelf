@@ -1,0 +1,7 @@
+  <h1>Welcome to <%= @user.gr_full_name %>'s Bookshelf!</h1>
+
+  <div class="bookshelf">
+    <% @first_20_book_objects.each do |book| %>
+      <%= erb :_book, locals: {book: book} %>
+    <% end %>
+  </div>
