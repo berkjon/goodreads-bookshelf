@@ -31,6 +31,8 @@ Dotenv.load
 require 'oauth'
 require 'nokogiri'
 
+require 'resque/server'
+
 # Some helper constants for path-centric logic
 APP_ROOT = Pathname.new(File.expand_path('../../', __FILE__))
 
@@ -51,6 +53,7 @@ end
 # Set up the controllers and helpers
 Dir[APP_ROOT.join('app', 'controllers', '*.rb')].each { |file| require file }
 Dir[APP_ROOT.join('app', 'helpers', '*.rb')].each { |file| require file }
+Dir[APP_ROOT.join('app', 'jobs', '*.rb')].each { |file| require file } #added for resque background jobs
 
 # Set up the database and models
 require APP_ROOT.join('config', 'database')

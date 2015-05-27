@@ -5,15 +5,12 @@ end
 
 post '/user_id' do #create bookshelf for unregistered user
   if params[:goodreads_id] =~ /^[0-9]/ #if a number is entered
-    @user = User.find_or_create_by(gr_id: params[:goodreads_id])
+    user = User.find_or_create_by(gr_id: params[:goodreads_id])
+    fetch_books_from_gr_and_save_to_db(user)
+    redirect "/#{user.gr_id}"
   else #a number wasn't provided
     redirect '/' #TODO: Notify user that they can only pass in a number
   end
-
-  api_response = HTTParty.get("https://www.goodreads.com/review/list/#{gr_id}.xml?key=#{ENV['GR_API_KEY']}&v=2&per_page=200&sort=rating")
-  parse_response(@user, api_response)
-
-  redirect "/user/#{@user.gr_id}"
 end
 
 
@@ -82,12 +79,14 @@ get '/auth' do #callback from Goodreads OAuth
   user.gr_oauth_secret = @access_token.secret
   user.gr_full_name = current_user_full_name
   user.save!
+  fetch_books_from_gr_and_save_to_db(user)
+
   session[:user_id] = user.id
 
   if current_user.username.nil? #if user hasn't created an account yet
     redirect "/profile/#{user.gr_id}/new"
   else #if it's a returning user
-    redirect "/profile/#{current_user.username}"
+    redirect "/#{current_user.username}"
   end
 end
 
@@ -107,11 +106,11 @@ get '/profile/:username' do
   end
 end
 
+
 get '/profile/:gr_id/new' do #Get username to create new user account
   puts "CURRENT_USER.GR_ID: #{current_user.gr_id}"
   puts "PARAMS.GR_ID: #{params[:gr_id]}"
   user = User.find_by(gr_id: params[:gr_id])
-
   if current_user.gr_id.to_s == params[:gr_id]
     erb :new_user, locals: {user: user}
   else
@@ -119,9 +118,37 @@ get '/profile/:gr_id/new' do #Get username to create new user account
   end
 end
 
+
 get '/logout' do
   logout
   redirect '/'
+end
+
+
+############## MODIFYING COVERS AND DELETING BOOKS FROM SHELF #################
+
+put '/:gr_id/books/:gr_review_id' do #update cover image URL
+  if current_user.gr_id == params[:gr_id]
+    user = User.find_by(gr_id: params[:gr_id])
+    book = user.books.find_by(gr_review_id: params[:gr_review_id])
+    book.cover_img_url = params[:new_book_cover_url]
+    book.cover_img_set_by_user = true
+    book.save!
+    redirect "/<%= user.gr_id %>/shelf/modify"
+  else
+    puts "Can't modify book information of another user"
+  end
+end
+
+delete '/:gr_id/books/:gr_review_id' do #delete a book from bookshelf
+  if current_user.gr_id == params[:gr_id]
+    user = User.find_by(gr_id: params[:gr_id])
+    book = user.books.find_by(gr_review_id: params[:gr_review_id])
+    book.destroy!
+    redirect "/<%= user.gr_id %>/shelf/modify"
+  else
+    puts "Can't modify book information of another user"
+  end
 end
 
 

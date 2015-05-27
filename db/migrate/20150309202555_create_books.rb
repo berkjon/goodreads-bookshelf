@@ -20,6 +20,7 @@ class CreateBooks < ActiveRecord::Migration
       t.string :gr_book_url
 
       t.string :cover_img_url
+      t.boolean :cover_img_set_by_user, default: false
 
       t.belongs_to :user
       t.timestamps
