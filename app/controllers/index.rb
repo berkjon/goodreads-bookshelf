@@ -20,8 +20,6 @@ end
 
 post '/profile/:gr_id/register' do #add username to new acct
   user = User.find_by(gr_id: params[:gr_id])
-  puts "Current User GR_ID: #{current_user.gr_id}"
-  puts "Params GR_ID: #{params[:gr_id]}"
   if user.nil? || current_user.gr_id != params[:gr_id].to_i
     redirect '/'
   else
@@ -35,7 +33,7 @@ end
 
 get '/user/infinite_scroll' do
   all_books = session[:sorted_book_ids]
-  byebug
+  # byebug
   next_book_ids = all_books.shift(10)
   session[:sorted_book_ids] = all_books
   more_books = next_book_ids.map { |id| Book.find(id) }
