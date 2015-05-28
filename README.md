@@ -17,6 +17,10 @@ https://www.goodreads.com/review/list/8403316.xml?key=ONBHGOyk3Zy1tq3meX1RZA&v=2
 https://www.goodreads.com/user/show/8403316.xml?key=ONBHGOyk3Zy1tq3meX1RZA
 
 
+## APIs ##
+- Goodreads
+- LibraryThings
+
 
 ## Misc ideas
 - external links should open in new window, not redirect

@@ -7,27 +7,44 @@
     <li>Shelfworm username: <%= current_user.username %></li>
     <li>Public shelf URL: <a href="www.shelfworm.com/<%= current_user.username %>">www.shelfworm.com/<%= current_user.username %></a></li>
     <li>Total books on shelf: <%= current_user.books.count %></li>
-    <li>Goodreads profile URL: [TBU]</li>
-    <li>Last login: [TBU]</li>
+    <li>Goodreads profile URL: <a href="www.goodreads.com/user/show/<%= current_user.gr_id %>">www.goodreads.com/user/show/<%= current_user.gr_id %></a></li>
+    <li>Last bookshelf refresh: [TBU]</li>
     <li>Last time someone viewed your profile: [TBU]</li>
   </ul>
 
 
   <h2>Book Detail:</h2>
-  <% counter = 0 %>
   <% current_user.books.each do |book| %>
-    <div class="book_entry">
-      <% counter+= 1 %>
-      <h3><%= counter %>) <%= book.title %></h3>
-      <p>Author: <%= book.author %></p>
-      <p>Your Rating: <%= book.user_rating %></p>
-      <p>Community Avg. Rating: <%= book.gr_avg_rating %></p>
-      <p>Cover: <a href="<%= book.cover_img_url %>"><%= book.cover_img_url %></a></p>
-      <p><img src="<%= book.cover_img_url %>"></p>
-      <p>ISBN13: <%= book.isbn13 %>
-      <p>Goodreads link: <a href="<%= book.gr_book_url %>"><%= book.gr_book_url %></a></p>
-      <p>Description: <%= book.description %></p>
-      <p>My Review: <%= book.user_review %></p>
+    <div class="book-detail row gutters">
+      <div class="col span_7">
+        <span class="info-detail"><strong>Title:</strong> <%= book.title %></span><br/>
+        <span class="info-detail"><strong>Author:</strong> <%= book.author %></span><br/>
+        <span class="info-detail"><strong>My Rating:</strong> <%= book.user_rating %></span><br/>
+        <span class="info-detail"><strong>Community Avg. Rating:</strong> <%= book.gr_avg_rating %></span><br/>
+        <span class="info-detail"><strong>ISBN13:</strong> <%= book.isbn13 %></span><br/>
+        <span class="info-detail"><strong>Goodreads link:</strong> <a href="<%= book.gr_book_url %>"><%= book.gr_book_url %></a></span><br/>
+        <span class="info-detail"><strong>My Review:</strong> <%= book.user_review %></span><br/>
+        <span class="info-detail"><strong>Cover URL:</strong> <a href="<%= book.cover_img_url %>"><%= book.cover_img_url %></a></span><br/>
+
+        <br/>
+        <span class="info-detail">Don't like this cover?  Provide the link for a different one instead:</span>
+        <form action='/<%= book.user.gr_id %>/books/<%= book.gr_review_id %>' method='post'>
+          <input type="hidden" name="_method" value="put">
+          <input class="cover-img-url" type='url' name='username' placeholder='e.g. http://covers.openlibrary.org/b/isbn/9780393062359...' pattern="https?://.+" required/><br/>
+          <input class="button button-3d" type='submit' value='Update Cover Image URL'/>
+        </form>
+
+        <br/><br/>
+        <span class="info-detail">Click below to remove this book from your Shelfworm bookshelf:</span>
+        <form action='/<%= book.user.gr_id %>/books/<%= book.gr_review_id %>' method='post'>
+          <input type="hidden" name="_method" value="delete">
+          <input class="button button-3d" type='submit' value='Delete Book From Shelf'/>
+        </form>
+
+      </div>
+      <div class="col span_5">
+        <img class="book-detail-cover" src="<%= book.cover_img_url %>">
+      </div>
     </div>
   <% end %>
 

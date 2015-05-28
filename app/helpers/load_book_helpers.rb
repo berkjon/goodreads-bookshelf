@@ -1,14 +1,13 @@
-helpers do
+module LoadBookHelpers
 
-  def parse_response(user, api_response)
-    total_reviews = api_response['GoodreadsResponse']['reviews']['total'].to_i
-    book_array = api_response['GoodreadsResponse']['reviews']['review']
-    # thread_list = [] # keep track of all threads
+  def fetch_books_from_goodreads(user, page_num=1)
+    return HTTParty.get("https://www.goodreads.com/review/list/#{user.gr_id}.xml?key=#{ENV['GR_API_KEY']}&v=2&page=#{page_num}&per_page=200&sort=rating")
+  end
 
+  def save_books_to_db(user, book_array)
     book_array.each do |book|
       unless book_already_on_shelf?(user, book['book']['id'])
         if hash_or_array_to_string(book['shelves']['shelf'], 'name').match(/(?<![\w\S])read(?![\w\d])/)
-          # thread_list << Thread.new { # add new thread to populate each book
             new_book = user.books.create(
               title: book['book']['title'],
               author: hash_or_array_to_string(book['book']['authors']['author'], 'name'),
@@ -27,16 +26,30 @@ helpers do
               gr_book_url: book['book']['link'],
               cover_img_url: find_best_cover_img_url(book['book']['image_url'], book['book']['isbn13'])
             )
-            # ActiveRecord::Base.connection_pool.release_connection # needed to prevent 5 second timeout caused by threading
-          # }
         end
       end
     end
+  end
 
-    # thread_list.each {|thread| thread.join} # wait for each thread to complete
+  def next_api_page(api_response)
+    reviews_start = api_response['GoodreadsResponse']['reviews']['start'].to_i
+    reviews_end = api_response['GoodreadsResponse']['reviews']['end'].to_i
+    reviews_total = api_response['GoodreadsResponse']['reviews']['total'].to_i
 
-    # total_pages_required = total_reviews % 200
-    # total_pages_required.times-1 do
+    reviews_per_api_call = reviews_end - (reviews_start - 1)
+    # reviews_remaining = reviews_total - reviews_end
+
+    # api_calls_remaining = (reviews_remaining / reviews_per_api_call.to_f).ceil
+
+    if reviews_total == reviews_end
+      return next_api_page = nil
+    else
+      return next_api_page = (reviews_end / reviews_per_api_call) + 1
+    end
+  end
+
+  def book_already_on_shelf?(user, gr_book_id)
+    !!(user.books.find_by(gr_book_id: gr_book_id))
   end
 
   def hash_or_array_to_string(hash_or_array, key)
@@ -85,8 +98,9 @@ helpers do
     end
   end
 
-  def book_already_on_shelf?(user, gr_book_id)
-    user.books.where("gr_book_id='#{gr_book_id}'").length > 0
-  end
 
+end
+
+helpers do
+  include LoadBookHelpers
 end

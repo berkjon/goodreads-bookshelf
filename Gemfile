@@ -24,6 +24,7 @@ gem 'dotenv'
 gem 'oauth'
 gem 'nokogiri'
 gem 'foreman'
+gem 'resque'
 
 group :test do
   gem 'shoulda-matchers'

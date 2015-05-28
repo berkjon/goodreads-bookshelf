@@ -5,7 +5,7 @@
     <li>Books on Shelf: <%= current_user.books.count %></li>
     <li>Goodreads ID#: <%= current_user.gr_id %></li>
     <li><a href="/">Home</a></li>
-    <li><a href="/user/<%= current_user.gr_id %>">Bookshelf</a></li>
+    <li><a href="/<%= current_user.gr_id %>">Bookshelf</a></li>
     <li><a href="/<%= current_user.gr_id %>/shelf/modify">Detail / Edit</a></li>
     <li><a href="/logout">Logout</a></li>
   </ul>

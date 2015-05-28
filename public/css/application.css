@@ -102,15 +102,30 @@ nav ul li a {
           justify-content: center;
 }
 
-.book_entry {
+.book-detail {
   margin: 20px auto;
-  width: 600px;
-  padding: 0px 20px 20px 20px;
+  padding: 20px;
   border: 1px dotted black;
+  word-wrap: break-word;
   -webkit-flex: 0 1 auto;
       -ms-flex: 0 1 auto;
           flex: 0 1 auto; /* these are defaults for flex-grow-, flex-shrink and flex-basis, so optional */
 }
+
+.info-detail {
+  font-size: 0.8em;
+}
+
+.book-detail-cover{
+  width: 320px;
+  height: 480px;
+}
+
+input + .cover-img-url{
+  width: 100%;
+}
+
+
 
 
 /* FLIPPING CSS (http://davidwalsh.name/css-flip) */
