@@ -20,7 +20,9 @@ end
 
 post '/profile/:gr_id/register' do #add username to new acct
   user = User.find_by(gr_id: params[:gr_id])
-  if user.nil? || current_user.gr_id != params[:gr_id]
+  puts "Current User GR_ID: #{current_user.gr_id}"
+  puts "Params GR_ID: #{params[:gr_id]}"
+  if user.nil? || current_user.gr_id != params[:gr_id].to_i
     redirect '/'
   else
     puts "Adding username '#{params[:username]}' to GR acct# #{params[:gr_id]}"
@@ -187,7 +189,7 @@ get '/:user_identifier' do #for both registered and unregistered users
       session[:books_already_displayed] = []
       erb :user_shelf_registered
     else #username not found in DB
-      puts "ERROR: User '#{params[:username]}' does not exist."
+      puts "ERROR: User '#{params[:user_identifier]}' does not exist."
       redirect '/' #TODO: Render a page saying user does not exist
     end
   end
