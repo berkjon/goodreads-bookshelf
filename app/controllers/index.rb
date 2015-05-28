@@ -33,6 +33,7 @@ end
 
 get '/user/infinite_scroll' do
   all_books = session[:sorted_book_ids]
+  byebug
   next_book_ids = all_books.shift(10)
   session[:sorted_book_ids] = all_books
   more_books = next_book_ids.map { |id| Book.find(id) }

@@ -57,3 +57,8 @@ Dir[APP_ROOT.join('app', 'jobs', '*.rb')].each { |file| require file } #added fo
 
 # Set up the database and models
 require APP_ROOT.join('config', 'database')
+
+# Set up Redis if in production
+if ENV["REDISTOGO_URL"]
+  $redis = Resque.redis = Redis.new(:url => ENV["REDISTOGO_URL"])
+end
