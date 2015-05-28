@@ -1,15 +1,10 @@
-class RefreshBookshelf
-  @queue = :refresh_bookshelf
+module LoadBookHelpers
 
-  def perform(user_hash)
-    puts "INSIDE RefreshBookshelf RESQUE WORKER"
-    puts user_hash
-    byebug
-    api_response = HTTParty.get("https://www.goodreads.com/review/list/#{user.gr_id}.xml?key=#{ENV['GR_API_KEY']}&v=2&per_page=200&sort=rating")
+  def fetch_books_from_goodreads(user, page_num=1)
+    return HTTParty.get("https://www.goodreads.com/review/list/#{user.gr_id}.xml?key=#{ENV['GR_API_KEY']}&v=2&page=#{page_num}&per_page=200&sort=rating")
+  end
 
-    total_reviews = api_response['GoodreadsResponse']['reviews']['total'].to_i
-    book_array = api_response['GoodreadsResponse']['reviews']['review']
-
+  def save_books_to_db(user, book_array)
     book_array.each do |book|
       unless book_already_on_shelf?(user, book['book']['id'])
         if hash_or_array_to_string(book['shelves']['shelf'], 'name').match(/(?<![\w\S])read(?![\w\d])/)
@@ -33,6 +28,23 @@ class RefreshBookshelf
             )
         end
       end
+    end
+  end
+
+  def next_api_page(api_response)
+    reviews_start = api_response['GoodreadsResponse']['reviews']['start'].to_i
+    reviews_end = api_response['GoodreadsResponse']['reviews']['end'].to_i
+    reviews_total = api_response['GoodreadsResponse']['reviews']['total'].to_i
+
+    reviews_per_api_call = reviews_end - (reviews_start - 1)
+    # reviews_remaining = reviews_total - reviews_end
+
+    # api_calls_remaining = (reviews_remaining / reviews_per_api_call.to_f).ceil
+
+    if reviews_total == reviews_end
+      return next_api_page = nil
+    else
+      return next_api_page = (reviews_end / reviews_per_api_call) + 1
     end
   end
 
@@ -87,4 +99,8 @@ class RefreshBookshelf
   end
 
 
+end
+
+helpers do
+  include LoadBookHelpers
 end

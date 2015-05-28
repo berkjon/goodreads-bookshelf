@@ -4,9 +4,13 @@ end
 
 
 post '/user_id' do #create bookshelf for unregistered user
-  if params[:goodreads_id] =~ /^[0-9]/ #if a number is entered
-    user = User.find_or_create_by(gr_id: params[:goodreads_id])
-    fetch_books_from_gr_and_save_to_db(user)
+  if params[:gr_id] =~ /^[0-9]/ #if a number is entered
+    user = User.find_or_create_by(gr_id: params[:gr_id])
+    api_response = fetch_books_from_goodreads(user)
+    first_20_books = api_response['GoodreadsResponse']['reviews']['review'][0..19]
+
+    save_books_to_db(user, first_20_books)
+    Resque.enqueue(LoadNewBooks, user, api_response, 20)
     redirect "/#{user.gr_id}"
   else #a number wasn't provided
     redirect '/' #TODO: Notify user that they can only pass in a number
@@ -79,7 +83,8 @@ get '/auth' do #callback from Goodreads OAuth
   user.gr_oauth_secret = @access_token.secret
   user.gr_full_name = current_user_full_name
   user.save!
-  fetch_books_from_gr_and_save_to_db(user)
+  # fetch_books_from_gr_and_save_to_db(user)
+  Resque.enqueue(LoadNewBooks, user)
 
   session[:user_id] = user.id
 
