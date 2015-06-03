@@ -1,5 +1,6 @@
 .bundle
 .DS_Store
+dump.rdb
 config/database.yml
 db/*.sqlite3
 db/*.sqlite
@@ -25,4 +26,3 @@ chromedriver.log
 bin/
 .env
 *.swp
-dump.rdb
