@@ -1,4 +1,4 @@
-<div class="flip-container rating-<%= book.user_rating %>" ontouchstart="this.classList.toggle('hover');">
+<div class="flip-container rating-<%= book.user_rating %>" data-gr-review-id="<%= book.gr_review_id %>" ontouchstart="this.classList.toggle('hover');">
   <div class="flipper">
     <div class="front">
       <!-- front content -->
@@ -34,8 +34,6 @@
         <div class="book-tiny-urls"><a href="<%= book.gr_book_url %>">Goodreads</a> |
         <a href="http://www.amazon.com/gp/product/<%= book.isbn10 %>/?tag=shelfworm-20">Amazon</a></div>
       </div>
-
-
     </div>
   </div>
 </div>

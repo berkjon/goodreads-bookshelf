@@ -20,7 +20,7 @@ end
 
 post '/profile/:gr_id/register' do #add username to new acct
   user = User.find_by(gr_id: params[:gr_id])
-  if user.nil? || current_user.gr_id != params[:gr_id]
+  if user.nil? || current_user.gr_id != params[:gr_id].to_i
     redirect '/'
   else
     puts "Adding username '#{params[:username]}' to GR acct# #{params[:gr_id]}"
@@ -31,27 +31,21 @@ post '/profile/:gr_id/register' do #add username to new acct
 end
 
 
-get '/user/infinite_scroll' do
-  all_books = session[:sorted_book_ids]
-  next_book_ids = all_books.shift(10)
-  session[:sorted_book_ids] = all_books
-  more_books = next_book_ids.map { |id| Book.find(id) }
-  erb :_more_books, locals: {more_books: more_books}, layout: false;
-end
+# get '/user/infinite_scroll' do
+#   all_books = session[:sorted_book_ids]
+#   next_book_ids = all_books.shift(10)
+#   session[:sorted_book_ids] = all_books
+#   more_books = next_book_ids.map { |id| Book.find(id) }
+#   erb :_more_books, locals: {more_books: more_books}, layout: false
+# end
 
-
-post '/user/infinite_scroll' do
-  # p "session[:sorted_book_ids]: count: #{session[:sorted_book_ids].length} contents: #{session[:sorted_book_ids]}"
-  all_books = session[:sorted_book_ids]
-  next_book_ids = all_books.shift(10)
-  session[:sorted_book_ids] = all_books
-
-  # session[:books_already_displayed] += next_book_ids
-  # p "session[:books_already_displayed]: count: #{session[:books_already_displayed].length} contents: #{session[:books_already_displayed]}"
-  # p "next_book_ids: #{next_book_ids}"
-  # p "session[:sorted_book_ids]: count: #{session[:sorted_book_ids].length} contents: #{session[:sorted_book_ids]}"
-  more_books = next_book_ids.map { |id| Book.find(id) }
-  p more_books
+get '/users/:gr_id/infinite_scroll' do
+  user = User.find_by(gr_id: params[:gr_id])
+  # puts params[:next_page]
+  # more_books = paginated_books(user, params[:next_page])
+  puts params[:last_book_id]
+  more_books = next_books_for_infinite_scroll(user, params[:last_book_id])
+  erb :_more_books, locals: {more_books: more_books}, layout: false
 end
 
 
@@ -186,7 +180,7 @@ get '/:user_identifier' do #for both registered and unregistered users
       session[:books_already_displayed] = []
       erb :user_shelf_registered
     else #username not found in DB
-      puts "ERROR: User '#{params[:username]}' does not exist."
+      puts "ERROR: User '#{params[:user_identifier]}' does not exist."
       redirect '/' #TODO: Render a page saying user does not exist
     end
   end

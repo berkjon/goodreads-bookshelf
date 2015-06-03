@@ -1,61 +1,37 @@
-// var windo = $(window);
-
-// // $('.back').on('click', function(event){
-//   var refreshing = false;
-//   console.log(windo.scrollTop(), windo.height(), $(document).height());
-//   console.log($(this));
-
-//   if(Math.floor(windo.scrollTop() + windo.height()) >= $(document).height()-10 && !refreshing) {
-//     console.log('refreshing!');
-
-//     refreshing = true;
-
-//     $.ajax({
-//       url: '/user/infinite_scroll'
-//     }).done(function(html){
-//       $('.bookshelf').append(html);
-//       setTimeout(function(){refreshing = false}, 1000);
-
-//     }).fail(function(){
-//       console.log("you failed at infinite scroll");
-//     })
-//     console.log("back inside if condition");
-//   }
-// })
-
-
-
 $(document).ready(function() {
-  // PAGENUM = 3 // starts at 3 because first 2 pages served on initial GET
   var fetching = false;
 
-  console.log('ready!');
-  // $('.back').click(function() {
   $(window).scroll(function(event) {
     // console.log(event)
     // console.log(event.eventPhase)
     // debugger;
     if(Math.floor($(window).scrollTop() + $(window).height()) >= $(document).height()-10 && !fetching) {
       fetching = true;
-      console.log('TRIGGERED INFINITE SCROLL');
+      addLoader();
+      var last_book_id = $('.flip-container').last().data('gr-review-id');
+      var user_id = $('.bookshelf').data('gr-id');
+      console.log('Infinite scroll triggered.');
       $.ajax({
-        url: '/user/infinite_scroll'
+        data: {last_book_id: last_book_id},
+        url: '/users/'+user_id+'/infinite_scroll'
       }).done(function(html){
         fetching = false;
-        // console.log(html)
+        removeLoader();
         $('.bookshelf').append(html);
-        // event.bubbles = false;
-
-        // event.stopPropagation();
       }).fail(function(){
         fetching = false;
-        console.log("you failed at infinite scroll");
-        // console.log("\n")
+        console.log("Infinite scroll failed.");
       })
-      console.log("back inside if condition");
     }
   });
 
-
 });
 
+function addLoader(){
+  var loader = "<div class='loader-wrapper'><div class='loader'>Loading more books...</div></div>"
+  $('.bookshelf-wrapper').append(loader)
+}
+
+function removeLoader(){
+  $('.loader-wrapper').remove()
+}
