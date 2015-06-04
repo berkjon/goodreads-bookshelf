@@ -6,8 +6,7 @@ class LoadNewBooks
   @queue = :load_new_books
 
   def self.perform(user_hash, api_response, books_already_saved=0)
-    puts "INSIDE RefreshBookshelf RESQUE WORKER"
-    puts user_hash
+    puts "Inside LoadNewBooks Resque Worker"
     user = User.find_by(gr_id: user_hash['gr_id'])
 
     book_array = api_response['GoodreadsResponse']['reviews']['review']

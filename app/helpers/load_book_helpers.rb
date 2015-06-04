@@ -6,28 +6,33 @@ module LoadBookHelpers
 
   def save_books_to_db(user, book_array)
     book_array.each do |book|
-      unless book_already_on_shelf?(user, book['book']['id'])
-        if hash_or_array_to_string(book['shelves']['shelf'], 'name').match(/(?<![\w\S])read(?![\w\d])/)
-            new_book = user.books.create(
-              title: book['book']['title'],
-              author: hash_or_array_to_string(book['book']['authors']['author'], 'name'),
-              isbn10: book['book']['isbn'],
-              isbn13: book['book']['isbn13'],
-              publication_year: book['book']['publication_year'],
-              publication_month: book['book']['publication_month'],
-              num_pages: book['book']['num_pages'],
-              description: book['book']['description'],
-              user_rating: book['rating'],
-              user_review: strip_text_if_not_nil(book['body']),
-              date_added: book['date_added'],
-              gr_review_id: book['id'],
-              gr_book_id: book['book']['id'],
-              gr_avg_rating: book['book']['average_rating'],
-              gr_book_url: book['book']['link'],
-              cover_img_url: find_best_cover_img_url(book['book']['image_url'], book['book']['isbn13'])
-            )
+      # unless book_already_on_shelfworm_shelf?(user, book['book']['id'])
+        # if hash_or_array_to_string(book['shelves']['shelf'], 'name').match(/(?<![\w\S])read(?![\w\d])/)
+        if on_shelf?(book, 'read') && new_info_on_goodreads?(user, book) #skips books not yet read, and in DB but not changed on GR
+          book_in_db = user.books.find_or_initialize_by(gr_review_id: book['id'])
+          book_in_db.update(
+            title: book['book']['title'],
+            author: hash_or_array_to_string(book['book']['authors']['author'], 'name'),
+            isbn10: book['book']['isbn'],
+            isbn13: book['book']['isbn13'],
+            publication_year: book['book']['publication_year'],
+            publication_month: book['book']['publication_month'],
+            num_pages: book['book']['num_pages'],
+            description: book['book']['description'],
+            user_rating: book['rating'],
+            user_review: strip_text_if_not_nil(book['body']),
+            date_added: book['date_added'],
+            gr_review_id: book['id'],
+            gr_book_id: book['book']['id'],
+            gr_avg_rating: book['book']['average_rating'],
+            gr_book_url: book['book']['link'],
+          )
+          if (book_in_db.cover_img_set_by_user == false) || book_in_db.cover_img_url.nil? #only update cover img URL if the user hasn't set it already
+            book_in_db.cover_img_url = find_best_cover_img_url(book['book']['image_url'], book['book']['isbn13'])
+          end
+          book_in_db.save!
         end
-      end
+      # end
     end
   end
 
@@ -37,9 +42,6 @@ module LoadBookHelpers
     reviews_total = api_response['GoodreadsResponse']['reviews']['total'].to_i
 
     reviews_per_api_call = reviews_end - (reviews_start - 1)
-    # reviews_remaining = reviews_total - reviews_end
-
-    # api_calls_remaining = (reviews_remaining / reviews_per_api_call.to_f).ceil
 
     if reviews_total == reviews_end
       return next_api_page = nil
@@ -48,11 +50,37 @@ module LoadBookHelpers
     end
   end
 
-  def book_already_on_shelf?(user, gr_book_id)
+  def book_already_on_shelfworm_shelf?(user, gr_book_id)
     !!(user.books.find_by(gr_book_id: gr_book_id))
   end
 
-  def hash_or_array_to_string(hash_or_array, key)
+  def on_shelf?(book, shelf_name) #Checks if the book is on the user's 'Read' shelf on Goodreads
+    bookshelves = []
+    if book['shelves']['shelf'].is_a?(Array)
+      book['shelves']['shelf'].each { |shelf| bookshelves << shelf['name'] }
+    else #book is only on one shelf, so Goodreads returns it as a hash
+      bookshelves << book['shelves']['shelf']['name']
+    end
+
+    bookshelves.include?(shelf_name)
+    # hash_or_array_to_string(book['shelves']['shelf'], 'name').match(/(?<![\w\S])read(?![\w\d])/)
+  end
+
+  def new_info_on_goodreads?(user, book_info_from_gr) #Checks if the book review/info has been updated on Goodreads since being added to Shelfworm
+    gr_review_id = book_info_from_gr['id']
+    time_updated_on_gr = book_info_from_gr['date_updated'].to_datetime
+    book_in_db = user.books.find_by(gr_review_id: gr_review_id)
+    if book_in_db.nil? #Book not yet loaded to DB
+      return true
+    elsif time_updated_on_gr > book_in_db.updated_at #Book is in DB but GR has newer data
+      return true
+    else
+      return false
+    end
+  end
+
+
+  def hash_or_array_to_string(hash_or_array, key) #Handles situations where API data could either be a hash or an array (e.g. depending on number of authors), and if it's an array, converts everything to one string
     output_array = []
     if hash_or_array.is_a?(Array)
       hash_or_array.each { |element| output_array << element[key] }
@@ -61,6 +89,7 @@ module LoadBookHelpers
     end
     output_string = output_array.compact.join(', ')
   end
+
 
   def strip_text_if_not_nil(xml_element)
     xml_element.nil? ? xml_element : xml_element.strip
@@ -93,7 +122,6 @@ module LoadBookHelpers
 
       #add Google Books cover; requires API key and need to parse JSON response
       largest_img_url = covers.select {|k,v| v == covers.values.map(&:to_i).max}.keys.first
-      # binding.pry
       return largest_img_url
     end
   end

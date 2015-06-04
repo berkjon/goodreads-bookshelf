@@ -88,9 +88,9 @@ get '/auth' do #callback from Goodreads OAuth
   session[:user_id] = user.id
 
   api_response = fetch_books_from_goodreads(user)
-  Resque.enqueue(LoadNewBooks, user, api_response)
 
   if current_user.username.nil? #if user hasn't created an account yet
+    Resque.enqueue(LoadNewBooks, user, api_response)
     redirect "/profile/#{user.gr_id}/new"
   else #if it's a returning user
     redirect "/#{current_user.username}"
@@ -155,9 +155,7 @@ get '/:user_identifier' do #for both registered and unregistered users
       if @user.username #if an account already exists with a custom username
         redirect "/#{@user.username}"
       else #bookshelf already exists but is not claimed by the owner
-        books_array = @user.sorted_books.ids
-        first_20_books = books_array.shift(20)
-        @first_20_book_objects = first_20_books.map {|id| Book.find(id)}
+        @first_20_book_objects = @user.first_books(20)
         erb :user_shelf_unregistered
       end
     else #bookshelf has not been created for the user yet
@@ -167,9 +165,7 @@ get '/:user_identifier' do #for both registered and unregistered users
 
   else #a username is being passed in (not a Goodreads ID#)
     if @user = User.find_by(username: params[:user_identifier]) #username is successfully found
-      books_array = @user.sorted_books.ids
-      first_20_books = books_array.shift(20)
-      @first_20_book_objects = first_20_books.map {|id| Book.find(id)}
+      @first_20_book_objects = @user.first_books(20)
       erb :user_shelf_registered
     else #username not found in DB
       puts "ERROR: User '#{params[:user_identifier]}' does not exist."
@@ -179,11 +175,15 @@ get '/:user_identifier' do #for both registered and unregistered users
 end
 
 get '/:gr_id/shelf/modify' do
-  puts current_user.gr_id.class
-  puts params[:gr_id].class
-  puts current_user.gr_id.to_i == params[:gr_id].to_i
   if current_user.gr_id == params[:gr_id]
-    puts "current_user.gr_id == params[:gr_id]"
+    erb :modify_shelf
+  else
+    halt 403, "Sorry, you are not authorized to view this page :("
+  end
+end
+
+get '/:gr_id/shelf/resync' do #Update book data from Goodreads
+  if current_user.gr_id == params[:gr_id]
     erb :modify_shelf
   else
     halt 403, "Sorry, you are not authorized to view this page :("
