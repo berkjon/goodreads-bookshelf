@@ -181,7 +181,9 @@ end
 get '/:gr_id/shelf/modify' do
   puts current_user.gr_id
   puts params[:gr_id]
+  puts current_user.gr_id == params[:gr_id]
   if current_user.gr_id == params[:gr_id]
+    puts "current_user.gr_id == params[:gr_id]"
     erb :modify_shelf
   else
     halt 403, "Sorry, you are not authorized to view this page :("
