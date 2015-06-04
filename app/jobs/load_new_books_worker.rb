@@ -9,9 +9,7 @@ class LoadNewBooks
     puts "Inside LoadNewBooks Resque Worker"
     user = User.find_by(gr_id: user_hash['gr_id'])
 
-    book_array = api_response['GoodreadsResponse']['reviews']['review']
-    remaining_books_to_save = book_array[books_already_saved..-1]
-
+    remaining_books_to_save = api_response['GoodreadsResponse']['reviews']['review'][books_already_saved..-1]
     save_books_to_db(user, remaining_books_to_save)
 
     until next_api_page(api_response).nil?

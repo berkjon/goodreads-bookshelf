@@ -13,11 +13,7 @@ post '/user_id' do #create bookshelf for unregistered user
       redirect "/#{params[:gr_id]}"
     else
       user = User.find_or_create_by(gr_id: params[:gr_id])
-      api_response = fetch_books_from_goodreads(user)
-      first_20_books = api_response['GoodreadsResponse']['reviews']['review'][0..19]
-
-      save_books_to_db(user, first_20_books)
-      Resque.enqueue(LoadNewBooks, user, api_response, 20)
+      fetch_and_save_books(user) #Saves first 20 immediately and enqueues the rest, to avoid timeout
       redirect "/#{user.gr_id}"
     end
   else #a number wasn't provided
@@ -90,7 +86,7 @@ get '/auth' do #callback from Goodreads OAuth
   api_response = fetch_books_from_goodreads(user)
 
   if current_user.username.nil? #if user hasn't created an account yet
-    Resque.enqueue(LoadNewBooks, user, api_response)
+    Resque.enqueue(LoadNewBooks, user, api_response) #Enqueue everything; no need to make an API call now
     redirect "/profile/#{user.gr_id}/new"
   else #if it's a returning user
     redirect "/#{current_user.username}"
@@ -184,8 +180,9 @@ end
 
 get '/:gr_id/shelf/resync' do #Update book data from Goodreads
   if current_user.gr_id == params[:gr_id]
-    erb :modify_shelf
+    fetch_and_save_books(current_user)
+    redirect "/#{current_user.gr_id}"
   else
-    halt 403, "Sorry, you are not authorized to view this page :("
+    halt 403, "Sorry, you are not authorized update this bookshelf :("
   end
 end

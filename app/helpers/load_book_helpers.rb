@@ -1,5 +1,12 @@
 module LoadBookHelpers
 
+  def fetch_and_save_books(user, books_to_save_immediately=20) #Wrapper method to call API, save some books immediately, and enqueue the rest
+    api_response = fetch_books_from_goodreads(user)
+    first_set_of_books = api_response['GoodreadsResponse']['reviews']['review'][0..books_to_save_immediately-1]
+    save_books_to_db(user, first_set_of_books)
+    Resque.enqueue(LoadNewBooks, user, api_response, books_to_save_immediately)
+  end
+
   def fetch_books_from_goodreads(user, page_num=1)
     return HTTParty.get("https://www.goodreads.com/review/list/#{user.gr_id}.xml?key=#{ENV['GR_API_KEY']}&v=2&page=#{page_num}&per_page=200&sort=rating")
   end
