@@ -179,9 +179,9 @@ get '/:user_identifier' do #for both registered and unregistered users
 end
 
 get '/:gr_id/shelf/modify' do
-  puts current_user.gr_id
-  puts params[:gr_id]
-  puts current_user.gr_id == params[:gr_id]
+  puts current_user.gr_id.class
+  puts params[:gr_id].class
+  puts current_user.gr_id.to_i == params[:gr_id].to_i
   if current_user.gr_id == params[:gr_id]
     puts "current_user.gr_id == params[:gr_id]"
     erb :modify_shelf
