@@ -14,7 +14,7 @@
 
 
   <h2>Book Detail:</h2>
-  <% current_user.books.each do |book| %>
+  <% current_user.sorted_books.each do |book| %>
     <div class="book-detail row gutters">
       <div class="col span_7">
         <span class="info-detail"><strong>Title:</strong> <%= book.title %></span><br/>
@@ -30,7 +30,7 @@
         <span class="info-detail">Don't like this cover?  Provide the link for a different one instead:</span>
         <form action='/<%= book.user.gr_id %>/books/<%= book.gr_review_id %>' method='post'>
           <input type="hidden" name="_method" value="put">
-          <input class="cover-img-url" type='url' name='username' placeholder='e.g. http://covers.openlibrary.org/b/isbn/9780393062359...' pattern="https?://.+" required/><br/>
+          <input class="cover-img-url" type='url' name='new_book_cover_url' placeholder='e.g. http://covers.openlibrary.org/b/isbn/9780393062359...' pattern="https?://.+" required/><br/>
           <input class="button button-3d" type='submit' value='Update Cover Image URL'/>
         </form>
 

@@ -23,7 +23,7 @@ class CreateBooks < ActiveRecord::Migration
       t.boolean :cover_img_set_by_user, default: false
 
       t.belongs_to :user
-      t.timestamps
+      t.timestamps null: false
     end
   end
 end
