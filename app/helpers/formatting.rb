@@ -9,13 +9,6 @@ helpers do
     end
   end
 
-  # def paginated_books(user, next_page) #for infinite scroll
-  #   per_page = 10
-  #   sorted_books = user.books.order('user_rating DESC')
-  #   lower = (next_page * 10) - per_page
-  #   upper = (next_page * 10) - 1
-  #   return next_books = sorted_books[lower..upper]
-  # end
 
   def next_books_for_infinite_scroll(user, last_book_gr_review_id) #for infinite scroll
     per_page = 10

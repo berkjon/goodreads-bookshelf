@@ -31,14 +31,6 @@ post '/profile/:gr_id/register' do #add username to new acct
 end
 
 
-# get '/user/infinite_scroll' do
-#   all_books = session[:sorted_book_ids]
-#   next_book_ids = all_books.shift(10)
-#   session[:sorted_book_ids] = all_books
-#   more_books = next_book_ids.map { |id| Book.find(id) }
-#   erb :_more_books, locals: {more_books: more_books}, layout: false
-# end
-
 get '/users/:gr_id/infinite_scroll' do
   user = User.find_by(gr_id: params[:gr_id])
   # puts params[:next_page]
@@ -187,6 +179,8 @@ get '/:user_identifier' do #for both registered and unregistered users
 end
 
 get '/:gr_id/shelf/modify' do
+  puts current_user.gr_id
+  puts params[:gr_id]
   if current_user.gr_id == params[:gr_id]
     erb :modify_shelf
   else
