@@ -10,6 +10,14 @@
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="/js/application.js"></script>
+  <!-- Google Analytics -->
+  <script async src='//www.google-analytics.com/analytics.js'></script>
+  <script>
+  window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+  ga('create', 'UA-XXXX-Y', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <!-- End Google Analytics -->
 
   <title>Shelfworm - The Virtual Bookshelf</title>
 </head>
@@ -18,5 +26,6 @@
     <%= erb :_logged_in_navbar %>
   <% end %>
   <%= yield %>
+
 </body>
 </html>
