@@ -85,8 +85,11 @@ get '/auth' do #callback from Goodreads OAuth
 
   api_response = fetch_books_from_goodreads(user)
 
+
   if current_user.username.nil? #if user hasn't created an account yet
+    puts "No user exists - redirect to create new account)"
     Resque.enqueue(LoadNewBooks, user, api_response) #Enqueue everything; no need to make an API call now
+    puts Resque.info
     redirect "/profile/#{user.gr_id}/new"
   else #if it's a returning user
     redirect "/#{current_user.username}"
