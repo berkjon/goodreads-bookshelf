@@ -93,6 +93,10 @@ nav ul li a {
   width: 200px;
 }
 
+.typewriter-font{
+  font-family: 'Special Elite', serif;
+}
+
 .bookshelf {
   display: -webkit-flex;
   display: -ms-flexbox;
