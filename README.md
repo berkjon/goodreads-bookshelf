@@ -2,7 +2,7 @@
 
 > *Watch the [Product Demo Video](https://www.youtube.com/watch?v=GVh5b7ZRkec "Product Demo") on YouTube*
 
-[Shelfworm](http://www.shelfworm.com) is your bookshelf's home on the web.  Users log in with their [Goodreads](http://www.goodreads.com) account and pick a custom URL, and Shelfworm creates a clean virtual bookshelf, finding the best cover image online for each book in their collection.  Hovering over each cover reveals details about the book, including the user's rating and written review, and a variety of other information from Goodreads.  Users can edit book covers or delete books entirely, if they don't want them to appear on their bookshelf.  Changes to a user's information on Goodreads can be synced to Shelfworm with the click of a button, without overwriting previous custom changes to their bookshelf on Shelfworm.
+[Shelfworm](http://www.shelfworm.com) is your bookshelf's home on the web.  Users log in with their [Goodreads](http://www.goodreads.com) account and pick a custom URL, and Shelfworm creates a clean virtual bookshelf for them, finding the best cover image online for each book in their collection.  Hovering over each cover reveals details about the book, including the user's rating and written review, and a variety of other information from Goodreads.  Users can edit book covers or delete books entirely, if they don't want them to appear on their bookshelf.  Changes to a user's information on Goodreads can be synced to Shelfworm with the click of a button, without overwriting previous custom changes to their bookshelf on Shelfworm.
 
 This was a solo project built in one week at Dev Bootcamp.
 
